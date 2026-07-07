@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HouseHunt - Owner Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            width: 240px;
+            height: 100vh;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #38bdf8;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.08);
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            background: #38bdf8;
+            color: black;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .topbar button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .stat-card p {
+            font-size: 20px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        /* FORM */
+        .form-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #38bdf8;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .Available { background: green; }
+        .Booked { background: red; }
+        .Pending { background: orange; }
+
+        .small {
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>🏠 HouseHunt</h2>
+    <a onclick="show('dashboard')">Dashboard</a>
+    <a onclick="show('add')">Add Property</a>
+    <a onclick="show('list')">My Properties</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <h3>Owner Dashboard</h3>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total</h3>
+            <p id="total">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Available</h3>
+            <p id="available">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Booked</h3>
+            <p id="booked">0</p>
+        </div>
+    </div>
+
+    <!-- ADD -->
+    <div id="add" class="section">
+        <div class="form-box">
+            <h3>Add Property</h3>
+
+            <input id="title" placeholder="Title">
+            <input id="location" placeholder="Location">
+            <input id="rent" placeholder="Rent">
+            <input id="image" placeholder="Image URL">
+
+            <select id="status">
+                <option>Available</option>
+                <option>Booked</option>
+                <option>Pending</option>
+            </select>
+
+            <textarea id="desc" placeholder="Description"></textarea>
+
+            <button onclick="addProperty()">Add Property</button>
+        </div>
+    </div>
+
+    <!-- LIST -->
+    <div id="list" class="section" style="display:none;">
+        <div class="grid" id="grid"></div>
+    </div>
+
+</div>
+
+<script>
+
+let properties = JSON.parse(localStorage.getItem("properties")) || [];
+
+/* 🔐 SECURITY CHECK - REDIRECT IF NO USER */
+/* 🔐 SECURITY CHECK - REDIRECT IF NO USER */
+// =========================
+// OWNER LOGIN PROTECTION
+// =========================
+
+window.onload = function () {
+
+    const user = JSON.parse(localStorage.getItem("househuntUser"));
+
+    // No user logged in
+    if (!user) {
+        alert("Please login as Owner.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Tenant logged in
+    if (user.role === "tenant") {
+        alert("Access Denied!\nOnly Owners can access this page.");
+        window.location.href = "tenant-dashboard.html";
+        return;
+    }
+
+    // Owner logged in
+    if (user.role === "owner") {
+        updateStats();
+        render();
+        show("dashboard");
+        return;
+    }
+
+    // Invalid role
+    alert("Invalid user.");
+    window.location.href = "login.html";
+
+    if (user.role !== "owner") {
+        alert("Access denied! You are logged in as a Tenant.");
+        window.location.href = "tenant-dashboard.html";
+        return;
+    }
+
+    updateStats();
+};
+
+  
+function show(page) {
+    document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+    document.getElementById(page).style.display = "block";
+
+    if(page === "list") render();
+    updateStats();
+}
+
+function addProperty() {
+    let p = {
+        title: title.value,
+        location: location.value,
+        rent: rent.value,
+        image: image.value,
+        status: status.value,
+        desc: desc.value
+    };
+
+    properties.push(p);
+    localStorage.setItem("properties", JSON.stringify(properties));
+
+    alert("Property Added!");
+    show('list');
+}
+
+function render() {
+    let grid = document.getElementById("grid");
+    grid.innerHTML = "";
+
+    properties.forEach(p => {
+        grid.innerHTML += `
+            <div class="card">
+                <img src="${p.image}">
+                <div class="content">
+                    <h3>${p.title}</h3>
+                    <p class="small">${p.location}</p>
+                    <p class="small">₹ ${p.rent}</p>
+                    <p class="small">${p.desc}</p>
+                    <span class="badge ${p.status}">${p.status}</span>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function updateStats() {
+    document.getElementById("total").innerText = properties.length;
+    document.getElementById("available").innerText =
+        properties.filter(p => p.status === "Available").length;
+
+    document.getElementById("booked").innerText =
+        properties.filter(p => p.status === "Booked").length;
+}
+
+/* 🚪 LOGOUT → INDEX PAGE */
+function logout() {
+
+    // Remove login information
+    localStorage.removeItem("househuntUser");
+    sessionStorage.clear();
+
+    alert("Logged out successfully!");
+
+    // Prevent going back using browser cache
+    window.location.replace("index.html");
+}
+
+updateStats();
+
+</script>
+
+</body>
+</html>

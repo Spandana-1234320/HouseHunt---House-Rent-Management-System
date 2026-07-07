@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HouseHunt</title>
+<style>
+body {font-family:Arial;background:#f4f6f9;}
+header{background:#357ABD;color:white;padding:20px;text-align:center;}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-content{padding:10px;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏠 HouseHunt Properties</h1>
+</header>
+
+<div id="housesContainer" class="cards"></div>
+
+<script>
+const properties = [
+{ id:1, title:"House 1", location:"Hyd", price:"25k", image:"images/houses/house1.jpg" },
+{ id:2, title:"House 2", location:"Blr", price:"45k", image:"images/houses/house2.jpg" },
+{ id:3, title:"House 3", location:"Chennai", price:"20k", image:"images/houses/house3.jpg" },
+{ id:4, title:"House 4", location:"Hyd", price:"55k", image:"images/houses/house4.jpg" },
+{ id:5, title:"House 5", location:"Ghatkesar", price:"28k", image:"images/houses/house5.jpg" },
+{ id:6, title:"House 6", location:"LB Nagar", price:"35k", image:"images/houses/house6.jpg" },
+{ id:7, title:"House 7", location:"Hyd", price:"40k", image:"images/houses/house7.jpg" },
+{ id:8, title:"House 8", location:"Blr", price:"52k", image:"images/houses/house8.jpg" },
+{ id:9, title:"House 9", location:"Chennai", price:"16k", image:"images/houses/house9.jpg" },
+{ id:10, title:"House 10", location:"Pune", price:"32k", image:"images/houses/house10.jpg" },
+{ id:11, title:"House 11", location:"Vizag", price:"27k", image:"images/houses/house11.jpg" },
+{ id:12, title:"House 12", location:"Vijayawada", price:"48k", image:"images/houses/house12.jpg" },
+{ id:13, title:"House 13", location:"Warangal", price:"21k", image:"images/houses/house13.jpg" },
+{ id:14, title:"House 14", location:"Delhi", price:"60k", image:"images/houses/house14.jpg" },
+{ id:15, title:"House 15", location:"Goa", price:"75k", image:"images/houses/house15.jpg" }
+];
+
+const container = document.getElementById("housesContainer");
+
+function display(){
+container.innerHTML = properties.map(p => `
+<div class="card" onclick="openProperty(${p.id})">
+<img src="${p.image}">
+<div class="card-content">
+<h3>${p.title}</h3>
+<p>${p.location}</p>
+<p>${p.price}</p>
+</div>
+</div>
+`).join("");
+}
+
+function openProperty(id){
+window.location.href = "property-details.html?id=" + id;
+}
+
+display();
+</script>
+
+</body>
+</html>

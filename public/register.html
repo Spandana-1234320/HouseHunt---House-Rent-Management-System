@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HouseHunt Register</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        .box {
+            width: 400px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1e3c72;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16335f;
+        }
+
+        /* hidden tenant section */
+        #tenantFields {
+            display: none;
+            padding: 10px;
+            background: #f2f6ff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>🏠 Register</h2>
+
+    <form id="regForm">
+
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <select id="role" onchange="checkRole()">
+            <option value="Tenant">Tenant</option>
+            <option value="Owner">Owner</option>
+        </select>
+
+        <!-- ✅ Tenant extra fields -->
+        <div id="tenantFields">
+            <input type="text" id="homeType" placeholder="Type of Home Needed (1BHK, 2BHK, Villa)">
+            <input type="number" id="members" placeholder="Number of Members Living">
+        </div>
+
+        <button type="submit">Register</button>
+
+    </form>
+</div>
+
+<script>
+
+// show/hide tenant fields
+function checkRole() {
+    let role = document.getElementById("role").value;
+    let box = document.getElementById("tenantFields");
+
+    if(role === "Tenant") {
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+
+// default call
+checkRole();
+
+document.getElementById("regForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let user = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        role: document.getElementById("role").value,
+        homeType: document.getElementById("homeType").value,
+        members: document.getElementById("members").value
+    };
+
+    localStorage.setItem("househuntUser", JSON.stringify(user));
+
+    window.location.href = "index.html";
+});
+
+</script>
+
+</body>
+</html>

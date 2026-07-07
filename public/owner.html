@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HouseHunt Owner Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#eef2f7;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+height:100vh;
+background:#16324f;
+color:white;
+position:fixed;
+left:0;
+top:0;
+padding:25px;
+}
+
+.sidebar h2{
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+padding:14px;
+margin:10px 0;
+background:rgba(255,255,255,.08);
+border-radius:8px;
+text-decoration:none;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:#1e88e5;
+}
+
+/* MAIN */
+.main{
+margin-left:260px;
+padding:30px;
+width:100%;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.header h1{
+color:#16324f;
+}
+
+/* STATS */
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.stat-card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.stat-card h3{
+margin-bottom:10px;
+color:#666;
+}
+
+.stat-card h1{
+color:#1e88e5;
+}
+
+/* SEARCH */
+.search input{
+width:100%;
+padding:15px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+margin-bottom:20px;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+}
+
+/* CARD */
+.card{
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+/* IMAGE FIX */
+.card img{
+width:100%;
+height:200px;
+object-fit:cover;
+display:block;
+}
+
+/* CONTENT */
+.content{
+padding:20px;
+}
+
+.content h2{
+margin-bottom:10px;
+color:#16324f;
+}
+
+.content p{
+margin:6px 0;
+color:#555;
+}
+
+/* BADGE */
+.badge{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+font-size:14px;
+font-weight:bold;
+margin-top:10px;
+color:white;
+}
+
+.pending{background:#f39c12;}
+.accepted{background:#28a745;}
+.rejected{background:#dc3545;}
+
+/* BUTTONS */
+.buttons{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.accept{background:#28a745;color:white;}
+.reject{background:#dc3545;color:white;}
+.logout{background:#16324f;color:white;}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>🏠 HouseHunt</h2>
+<a onclick="showDashboard()">Dashboard</a>
+<a onclick="showBookings()">Bookings</a>
+<a onclick="logout()">Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+<h1>Owner Dashboard</h1>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+
+<div class="stat-card">
+<h3>Total</h3>
+<h1 id="total">0</h1>
+</div>
+
+<div class="stat-card">
+<h3>Pending</h3>
+<h1 id="pending">0</h1>
+</div>
+
+<div class="stat-card">
+<h3>Accepted</h3>
+<h1 id="accepted">0</h1>
+</div>
+
+<div class="stat-card">
+<h3>Rejected</h3>
+<h1 id="rejected">0</h1>
+</div>
+
+</div>
+
+<!-- SEARCH -->
+<div class="search">
+<input type="text" id="search" placeholder="Search..." onkeyup="filterBookings()">
+</div>
+
+<!-- BOOKINGS -->
+<div class="grid" id="bookingBox"></div>
+
+</div>
+
+<script>
+
+/////////////////////////////////////////////////
+// 🔐 OWNER AUTH CHECK
+/////////////////////////////////////////////////
+
+let role = localStorage.getItem("role");
+let userId = localStorage.getItem("userId");
+
+if (!userId || role !== "owner") {
+    alert("Access Denied! Only Owner allowed");
+    window.location.href = "index.html";
+}
+
+/////////////////////////////////////////////////
+// 📦 BOOKINGS DATA
+/////////////////////////////////////////////////
+
+let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+/////////////////////////////////////////////////
+// 📌 RENDER BOOKINGS
+/////////////////////////////////////////////////
+
+function render(list = bookings){
+
+let box = document.getElementById("bookingBox");
+box.innerHTML = "";
+
+list.forEach((b,i)=>{
+
+let status = (b.status || "pending").toLowerCase();
+
+let badgeClass =
+status === "accepted" ? "accepted" :
+status === "rejected" ? "rejected" : "pending";
+
+box.innerHTML += `
+<div class="card">
+
+<img src="${b.img}">
+
+<div class="content">
+
+<h2>${b.property}</h2>
+
+<p><b>Tenant:</b> ${b.name}</p>
+<p><b>Phone:</b> ${b.phone}</p>
+<p><b>Email:</b> ${b.email}</p>
+<p><b>Location:</b> ${b.location}</p>
+<p><b>Rent:</b> ₹${b.rent}</p>
+<p><b>Date:</b> ${b.date}</p>
+
+<span class="badge ${badgeClass}">
+${status.toUpperCase()}
+</span>
+
+<div class="buttons">
+
+<button class="accept" onclick="accept(${i})">Accept</button>
+<button class="reject" onclick="reject(${i})">Reject</button>
+
+</div>
+
+</div>
+</div>
+`;
+});
+
+updateStats();
+localStorage.setItem("bookings", JSON.stringify(bookings));
+}
+
+/////////////////////////////////////////////////
+// ✔ ACCEPT / REJECT
+/////////////////////////////////////////////////
+
+function accept(i){
+bookings[i].status = "Accepted";
+render();
+}
+
+function reject(i){
+bookings[i].status = "Rejected";
+render();
+}
+
+/////////////////////////////////////////////////
+// 📊 STATS
+/////////////////////////////////////////////////
+
+function updateStats(){
+
+document.getElementById("total").innerText = bookings.length;
+
+document.getElementById("pending").innerText =
+bookings.filter(b=>b.status==="Pending").length;
+
+document.getElementById("accepted").innerText =
+bookings.filter(b=>b.status==="Accepted").length;
+
+document.getElementById("rejected").innerText =
+bookings.filter(b=>b.status==="Rejected").length;
+
+}
+
+/////////////////////////////////////////////////
+// 🔍 SEARCH
+/////////////////////////////////////////////////
+
+function filterBookings(){
+
+let val = document.getElementById("search").value.toLowerCase();
+
+let filtered = bookings.filter(b=>
+b.name.toLowerCase().includes(val) ||
+b.property.toLowerCase().includes(val) ||
+b.location.toLowerCase().includes(val)
+);
+
+render(filtered);
+}
+
+/////////////////////////////////////////////////
+// 🚪 NAV
+/////////////////////////////////////////////////
+
+function showDashboard(){
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function showBookings(){
+document.getElementById("bookingBox").scrollIntoView({behavior:"smooth"});
+}
+
+function logout(){
+localStorage.clear();
+window.location.href = "index.html";
+}
+
+/////////////////////////////////////////////////
+// INIT
+/////////////////////////////////////////////////
+
+render();
+
+</script>
+
+</body>
+</html>

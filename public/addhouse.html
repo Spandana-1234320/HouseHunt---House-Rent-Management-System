@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Add House</h2>
+
+<input id="title" placeholder="Title">
+<input id="location" placeholder="Location">
+<input id="rent" placeholder="Rent">
+<input id="owner" placeholder="Owner">
+<input id="mobile" placeholder="Mobile">
+
+<button onclick="saveHouse()">Save</button>
+
+<script>
+
+async function saveHouse(){
+
+await fetch("/houses",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+title:title.value,
+location:location.value,
+rent:rent.value,
+owner:owner.value,
+mobile:mobile.value
+})
+});
+
+alert("House Added");
+
+}
+
+</script>
+
+</body>
+</html>

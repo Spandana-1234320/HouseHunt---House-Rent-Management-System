@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HouseHunt | Property Details</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+}
+
+/* ===== HEADER ===== */
+
+header{
+    background:#1e293b;
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 60px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    margin-left:25px;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#38bdf8;
+}
+
+/* ===== MAIN ===== */
+
+.container{
+    width:90%;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:55% 45%;
+    gap:30px;
+}
+
+.image-box{
+    background:#fff;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.image-box img{
+    width:100%;
+    height:500px;
+    object-fit:cover;
+}
+
+.details{
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.verify{
+    background:#d1fae5;
+    color:#047857;
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:20px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.details h1{
+    font-size:35px;
+}
+
+.price{
+    font-size:30px;
+    color:#2563eb;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+.location{
+    font-size:18px;
+    color:#555;
+    margin-bottom:25px;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.feature{
+    background:#eff6ff;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.buttons{
+    margin-top:30px;
+}
+
+.book{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:15px 30px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-right:15px;
+}
+
+.book:hover{
+    background:#1d4ed8;
+}
+
+.wish{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:15px 30px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.wish:hover{
+    background:#dc2626;
+}
+
+.owner{
+    margin-top:35px;
+    background:#f8fafc;
+    padding:20px;
+    border-radius:10px;
+}
+
+.owner h2{
+    margin-bottom:15px;
+}
+
+.owner p{
+    line-height:35px;
+}
+
+.description{
+    margin-top:35px;
+}
+
+.description h2{
+    margin-bottom:15px;
+}
+
+.description p{
+    color:#555;
+    line-height:30px;
+}
+
+footer{
+    background:#1e293b;
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:50px;
+}
+
+@media(max-width:900px){
+
+.container{
+grid-template-columns:1fr;
+}
+
+.image-box img{
+height:300px;
+}
+
+header{
+flex-direction:column;
+}
+
+nav{
+margin-top:15px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">🏠 HouseHunt</div>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="houses.html">Properties</a>
+<a href="tenant-dashboard.html">Dashboard</a>
+<a href="bookings.html">Bookings</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<div class="image-box">
+
+<img id="houseImage" src="" alt="House">
+
+</div>
+
+<div class="details">
+
+<div class="verify">
+✔ Verified Property
+</div>
+
+<h1 id="title"></h1>
+
+<div class="price" id="price"></div>
+
+<div class="location">
+📍 <span id="location"></span>
+</div>
+
+<div class="features">
+
+<div class="feature">
+🛏 Bedrooms<br>
+<b id="bed"></b>
+</div>
+
+<div class="feature">
+🛁 Bathrooms<br>
+<b id="bath"></b>
+</div>
+
+<div class="feature">
+📐 Area<br>
+<b id="area"></b>
+</div>
+
+<div class="feature">
+🚗 Parking<br>
+Available
+</div>
+
+<div class="feature">
+⚡ Power Backup<br>
+Yes
+</div>
+
+<div class="feature">
+🪑 Furnished<br>
+Semi Furnished
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button class="book">Book Now</button>
+
+<button class="wish">❤ Wishlist</button>
+
+</div>
+
+<div class="owner">
+
+<h2>Owner Details</h2>
+
+<p><b>Name:</b> <span id="owner"></span></p>
+
+<p><b>Phone:</b> <span id="phone"></span></p>
+
+<p><b>Email:</b> <span id="email"></span></p>
+
+<p><b>Status:</b> Verified Owner ✔</p>
+
+</div>
+
+<div class="description">
+
+<h2>Description</h2>
+
+<p id="description"></p>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+© 2026 HouseHunt | All Rights Reserved
+
+</footer>
+
+<script>
+  const properties = [
+
+{
+    id:1,
+    title:"Luxury 3BHK Apartment",
+    location:"Hyderabad",
+    price:"₹25,000 / month",
+    bed:"3",
+    bath:"2",
+    area:"1250 sqft",
+    image:"images/houses/house1.jpg",
+    owner:"Ramesh Kumar",
+    phone:"+91 9876543210",
+    email:"ramesh@gmail.com",
+    description:"Beautiful luxury apartment near Hitech City with parking, lift, power backup, CCTV security and children's play area."
+},
+
+{
+    id:2,
+    title:"Modern Villa",
+    location:"Bangalore",
+    price:"₹45,000 / month",
+    bed:"4",
+    bath:"3",
+    area:"1800 sqft",
+    image:"images/houses/house2.jpg",
+    owner:"Suresh Reddy",
+    phone:"+91 9876543211",
+    email:"suresh@gmail.com",
+    description:"Premium villa with swimming pool, private garden, modular kitchen and clubhouse."
+},
+
+{
+    id:3,
+    title:"Premium 2BHK Flat",
+    location:"",
+    price:"₹20,000 / month",
+    bed:"2",
+    bath:"2",
+    area:"950 sqft",
+    image:"images/houses/house3.jpg",
+    owner:"Rahul Sharma",
+    phone:"+91 9876543212",
+    email:"rahul@gmail.com",
+    description:"Affordable apartment close to schools, hospitals and shopping malls."
+},
+
+{
+    id:4,
+    title:"Luxury Duplex House",
+    location:"Hyderabad",
+    price:"₹55,000 / month",
+    bed:"4",
+    bath:"4",
+    area:"2200 sqft",
+    image:"images/houses/house4.jpg",
+    owner:"Vikram Singh",
+    phone:"+91 9876543213",
+    email:"vikram@gmail.com",
+    description:"Luxury duplex with terrace, covered parking and premium interiors."
+},
+
+{
+    id:5,
+    title:"Family Independent House",
+    location:"Ghatkesar",
+    price:"₹28,000 / month",
+    bed:"3",
+    bath:"2",
+    area:"1400 sqft",
+    image:"images/houses/house5.jpg",
+    owner:"Anil Kumar",
+    phone:"+91 9876543214",
+    email:"anil@gmail.com",
+    description:"Peaceful residential house with garden and 24×7 water supply."
+}
+,
+{
+    id:6,
+    title:"Luxury 2BHK Apartment",
+    location:"L.B.Nagar",
+    price:"₹35,000 / month",
+    bed:"2",
+    bath:"2",
+    area:"1100 sqft",
+    image:"images/houses/house6.jpg",
+    owner:"Priya Sharma",
+    phone:"+91 9876543215",
+    email:"priya@gmail.com",
+    description:"Modern apartment with lift, gym, parking and 24/7 security."
+},
+
+{
+    id:7,
+    title:"Spacious 3BHK Villa",
+    location:"Hyderabad",
+    price:"₹40,000 / month",
+    bed:"3",
+    bath:"3",
+    area:"1700 sqft",
+    image:"images/houses/house7.jpg",
+    owner:"Mahesh Reddy",
+    phone:"+91 9876543216",
+    email:"mahesh@gmail.com",
+    description:"Beautiful villa with garden, balcony and covered parking."
+    
+},
+
+{
+    id:8,
+    title:"Premium Duplex House",
+    location:"Bangalore",
+    price:"₹52,000 / month",
+    bed:"4",
+    bath:"4",
+    area:"2400 sqft",
+    image:"images/houses/house8.jpg",
+    owner:"Sunitha Rao",
+    phone:"+91 9876543217",
+    email:"sunitha@gmail.com",
+    description:"Luxury duplex with modular kitchen, terrace and clubhouse."
+},
+
+{
+    id:9,
+    title:"Cozy 1BHK Flat",
+    location:"Chennai",
+    price:"₹16,000 / month",
+    bed:"1",
+    bath:"1",
+    area:"650 sqft",
+    image:"images/houses/house9.jpg",
+    owner:"Arun Kumar",
+    phone:"+91 9876543218",
+    email:"arun@gmail.com",
+    description:"Affordable flat near metro station with power backup."
+},
+
+{
+    id:10,
+    title:"Modern Independent House",
+    location:"Pune",
+    price:"₹32,000 / month",
+    bed:"3",
+    bath:"2",
+    area:"1500 sqft",
+    image:"images/houses/house10.jpg",
+    owner:"Deepak Verma",
+    phone:"+91 9876543219",
+    email:"deepak@gmail.com",
+    description:"Independent house with spacious rooms and private parking."
+},
+
+{
+    id:11,
+    title:"Elegant 3BHK Apartment",
+    location:"Visakhapatnam",
+    price:"₹27,000 / month",
+    bed:"3",
+    bath:"2",
+    area:"1350 sqft",
+    image:"images/houses/house11.jpg",
+    owner:"Kiran Reddy",
+    phone:"+91 9876543220",
+    email:"kiran@gmail.com",
+    description:"Premium apartment close to schools, malls and hospitals."
+},
+
+{
+    id:12,
+    title:"Luxury Family Villa",
+    location:"Vijayawada",
+    price:"₹48,000 / month",
+    bed:"4",
+    bath:"3",
+    area:"2300 sqft",
+    image:"images/houses/house12.jpg",
+    owner:"Sneha Gupta",
+    phone:"+91 9876543221",
+    email:"sneha@gmail.com",
+    description:"Luxury villa with garden, CCTV and children's play area."
+},
+
+{
+    id:13,
+    title:"Classic 2BHK House",
+    location:"Warangal",
+    price:"₹21,000 / month",
+    bed:"2",
+    bath:"2",
+    area:"980 sqft",
+    image:"images/houses/house13.jpg",
+    owner:"Ravi Teja",
+    phone:"+91 9876543222",
+    email:"raviteja@gmail.com",
+    description:"Comfortable family house with peaceful surroundings."
+},
+
+{
+    id:14,
+    title:"Premium Penthouse",
+    location:"Delhi",
+    price:"₹60,000 / month",
+    bed:"4",
+    bath:"4",
+    area:"2600 sqft",
+    image:"images/houses/house14.jpg",
+    owner:"Amit Sharma",
+    phone:"+91 9876543223",
+    email:"amit@gmail.com",
+    description:"Luxury penthouse with city view, private terrace and gym."
+},
+
+{
+    id:15,
+    title:"Royal 5BHK Villa",
+    location:"Goa",
+    price:"₹75,000 / month",
+    bed:"5",
+    bath:"5",
+    area:"3200 sqft",
+    image:"images/houses/house15.jpg",
+    owner:"Neha Kapoor",
+    phone:"+91 9876543224",
+    email:"neha@gmail.com",
+    description:"Luxury penthouse with city view, private terrace and gym."
+   
+  }
+];
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const houseId = parseInt(urlParams.get("id")) || 1;
+
+const selectedProperty =
+    properties.find(item => item.id === houseId) || properties[0];
+
+document.getElementById("houseImage").src = selectedProperty.image;
+document.getElementById("title").textContent = selectedProperty.title;
+document.getElementById("price").textContent = selectedProperty.price;
+document.getElementById("location").textContent = selectedProperty.location;
+document.getElementById("bed").textContent = selectedProperty.bed;
+document.getElementById("bath").textContent = selectedProperty.bath;
+document.getElementById("area").textContent = selectedProperty.area;
+document.getElementById("owner").textContent = selectedProperty.owner;
+document.getElementById("phone").textContent = selectedProperty.phone;
+document.getElementById("email").textContent = selectedProperty.email;
+document.getElementById("description").textContent = selectedProperty.description;
+
+// ------------ Book Button ------------
+
+document.querySelector(".book").addEventListener("click", function () {
+    alert("Booking Successful!");
+    window.location.href = "booking.html";
+});
+
+// ------------ Wishlist Button ------------
+
+document.querySelector(".wish").addEventListener("click", function () {
+    alert("Property Added to Wishlist ❤️");
+});
+
+</script>
+
+</body>
+</html>

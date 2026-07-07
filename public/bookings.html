@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HouseHunt Bookings</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#eef2f7;
+}
+
+/* HEADER */
+.header{
+background:#16324f;
+color:white;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logout{
+background:#dc3545;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* CONTAINER */
+.container{
+padding:30px;
+}
+
+/* SEARCH */
+.search{
+margin-bottom:20px;
+}
+
+.search input{
+width:100%;
+padding:15px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+}
+
+/* CARD */
+.card{
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.card img{
+width:100%;
+height:200px;
+object-fit:cover;
+display:block;
+}
+
+.content{
+padding:20px;
+}
+
+.content h2{
+margin-bottom:10px;
+color:#16324f;
+}
+
+.content p{
+margin:6px 0;
+color:#555;
+}
+
+/* BADGE */
+.badge{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+font-size:14px;
+font-weight:bold;
+margin-top:10px;
+color:white;
+}
+
+.pending{background:#f39c12;}
+.accepted{background:#28a745;}
+.rejected{background:#dc3545;}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<h1>📦 Bookings</h1>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+<!-- SEARCH -->
+<div class="search">
+<input type="text" id="search" placeholder="Search bookings..." onkeyup="filterBookings()">
+</div>
+
+<!-- BOOKINGS -->
+<div class="grid" id="bookingBox"></div>
+
+</div>
+
+<script>
+
+/////////////////////////////////////////////////
+// 🔐 ACCESS CONTROL
+/////////////////////////////////////////////////
+
+let user = JSON.parse(localStorage.getItem("househuntUser"));
+
+if (!user || user.role !== "owner") {
+    alert("Please login as Owner");
+    window.location.href = "login.html";
+}
+/////////////////////////////////////////////////
+// 📦 DATA
+/////////////////////////////////////////////////
+
+let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+/////////////////////////////////////////////////
+// 📌 RENDER
+/////////////////////////////////////////////////
+
+function render(list = bookings){
+
+let box = document.getElementById("bookingBox");
+box.innerHTML = "";
+
+list.forEach((b)=>{
+
+let status = (b.status || "pending").toLowerCase();
+
+let badgeClass =
+status === "accepted" ? "accepted" :
+status === "rejected" ? "rejected" : "pending";
+
+box.innerHTML += `
+<div class="card">
+
+<img src="${b.img}">
+
+<div class="content">
+
+<h2>${b.property}</h2>
+
+<p><b>Tenant:</b> ${b.name}</p>
+<p><b>Phone:</b> ${b.phone}</p>
+<p><b>Email:</b> ${b.email}</p>
+<p><b>Location:</b> ${b.location}</p>
+<p><b>Rent:</b> ₹${b.rent}</p>
+<p><b>Date:</b> ${b.date}</p>
+
+<span class="badge ${badgeClass}">
+${status.toUpperCase()}
+</span>
+
+</div>
+</div>
+`;
+});
+
+}
+
+/////////////////////////////////////////////////
+// 🔍 SEARCH
+/////////////////////////////////////////////////
+
+function filterBookings(){
+
+let val = document.getElementById("search").value.toLowerCase();
+
+let filtered = bookings.filter(b=>
+(b.name || "").toLowerCase().includes(val) ||
+(b.property || "").toLowerCase().includes(val) ||
+(b.location || "").toLowerCase().includes(val)
+);
+
+render(filtered);
+}
+
+/////////////////////////////////////////////////
+// 🚪 LOGOUT
+/////////////////////////////////////////////////
+
+function logout(){
+    localStorage.removeItem("househuntUser");
+    window.location.href = "index.html";
+}
+/////////////////////////////////////////////////
+// INIT
+/////////////////////////////////////////////////
+
+render();
+
+</script>
+
+</body>
+</html>

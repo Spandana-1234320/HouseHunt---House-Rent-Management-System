@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Delete Property</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #e74c3c;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #c0392b;
+    }
+
+    .msg {
+      text-align: center;
+      margin-top: 15px;
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🗑️ Delete Property</h1>
+</header>
+
+<div class="container">
+  <h2>Remove Listing</h2>
+
+  <input type="text" id="propertyId" placeholder="Enter Property ID">
+
+  <button onclick="deleteProperty()">Delete</button>
+
+  <p class="msg" id="msg"></p>
+</div>
+
+<script>
+async function deleteProperty() {
+  const id = document.getElementById("propertyId").value;
+
+  if (!id) {
+    alert("Please enter Property ID");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/delete/${id}`, {
+      method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    document.getElementById("msg").innerText = data.message;
+
+    document.getElementById("propertyId").value = "";
+
+  } catch (error) {
+    document.getElementById("msg").innerText = "Error deleting property";
+  }
+}
+</script>
+
+</body>
+</html>

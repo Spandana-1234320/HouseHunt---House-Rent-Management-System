@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HouseHunt - Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e88e5;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            font-size: 14px;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+
+        .extra {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .extra a {
+            color: #1e88e5;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">🏠 HouseHunt</div>
+
+    <h2>Login</h2>
+
+    <form onsubmit="return loginUser(event)">
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter email" required>
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+
+        <label>Select Role</label>
+        <select id="role">
+            <option value="tenant">Tenant</option>
+            <option value="owner">Owner</option>
+        </select>
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <div class="extra">
+        Don't have an account?
+        <a onclick="goToRegister()">Register</a>
+    </div>
+
+</div>
+
+<script>
+   function loginUser(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
+
+    if (email && password) {
+
+        // Store login information
+        localStorage.setItem("househuntUser", JSON.stringify({
+            email: email,
+            role: role
+        }));
+
+        alert("Login Successful!");
+
+        if (role === "tenant") {
+            window.location.href = "tenant-dashboard.html";
+        } else {
+             window.location.href = "owner-dashboard.html";
+            
+        }
+    } else {
+        alert("Please enter email and password.");
+    }
+}
+
+    function goToRegister() {
+        window.location.href = "register.html";
+    }
+</script>
+
+</body>
+</html>
